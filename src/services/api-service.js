@@ -1,5 +1,66 @@
+import config from '../config'
+
 const ApiService = {
+    //function to GET people
     getPeople(){
-        
+        return fetch(`${config.API_ENDPOINT}/people`, {
+            method: 'GET',
+            headers: {
+                'authorization': `Bearer ${config.API_TOKEN}`
+            }
+        })
+        .then(res => 
+            (!res.ok)
+            ?res.json().then(e => Promise.reject(e))
+            :res.json()
+            )
+    },
+    //function to POST person to queue
+    queuePerson(person){
+        return fetch(`${config.API_ENDPOINT}/people`, {
+            method: 'POST',
+            headers: {
+                'authorization': `Bearer ${config.API_TOKEN}`,
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(person)
+        })
+        .then(res => 
+            (!res.ok)
+                ?res.json().then(e => Promise.reject(e))
+                :res.json()
+                )
+    },
+    //function to GET animals
+    getPets(){
+        return fetch(`${config.API_ENDPOINT}/pets`, {
+            method: 'GET',
+            headers: {
+                'authorization': `Bearer ${config.API_TOKEN}`
+            }
+        })
+        .then(res => 
+            (!res.ok)
+            ?res.json().then(e => Promise.reject(e))
+            :res.json()
+            )
+    },
+    //function to DEQUEUE an animal
+    dequeuePet(petType){
+        return fetch(`${config.API_ENDPOINT}/pets`, {
+            method: 'DELETE',
+            headers: {
+                'authorization': `Bearer ${config.API_TOKEN}`,
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(petType)
+        })
+        .then(res => 
+            (!res.ok)
+            ?res.json().then(e => Promise.reject(e))
+            :res.json()
+            )
     }
 }
+
+export default ApiService
