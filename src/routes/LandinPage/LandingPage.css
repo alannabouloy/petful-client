@@ -1,0 +1,31 @@
+.landing-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.welcome-msg {
+    height: 50vh;
+    background-color: beige;
+    font-size: 18px;
+    overflow: scroll;
+}
+.welcome-heading {
+    text-align: center;
+}
+.main-image {
+    flex: 1;
+    width: 70%;
+    margin: auto;
+}
+
+.button-div {
+    text-align: center;
+    margin-top: 10px;
+}
+.button-div button {
+    width: 30%;
+}
+
+.welcome-msg p {
+    margin: 10px 5px;
+}

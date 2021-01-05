@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import LandingPage from '../../routes/LandinPage/LandingPage'
 import ApiService from '../../services/api-service'
-
+import PeopleList from '../PeopleList/PeopleList'
 
 export default class App extends Component {
     state = {
@@ -20,6 +21,10 @@ export default class App extends Component {
     }
     
     render(){
-        return <div></div>
+        return(
+            <div>
+                <LandingPage/>
+            </div>
+        )
     }
 }
