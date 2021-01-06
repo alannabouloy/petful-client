@@ -73,7 +73,6 @@ export default class AdoptionPage extends Component {
         let topOfQueue = this.getTopOfQueue()
         return (
             <div>
-                {/* Heading */}
                 <Header />
                 <AdoptionSection pets={this.state.pets} name={topOfQueue} adopting={this.state.adopting}/>
                 <Queue people={this.state.people}/>
