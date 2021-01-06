@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import AdoptionSection from '../../components/AdoptionSection/AdoptionSection'
 import Header from '../../components/Header/Header'
 
 export default class AdoptionPage extends Component {
@@ -9,6 +10,7 @@ export default class AdoptionPage extends Component {
             dog: {}
         },
         userInQueue: false,
+        adopting: false,
     }
 
     handleJoinQueue = () => {
@@ -62,18 +64,12 @@ export default class AdoptionPage extends Component {
 
     
     render(){
+        let topOfQueue = this.state.people[0].name || ''
         return (
             <div>
                 {/* Heading */}
                 <Header />
-                <section className='adoption'>
-                    <div className='pet-selection'>
-                        {/* Image if there is one (and if user has joined queue) */}
-                        {/* Pet information and Adopt Me Button */}
-                    </div>
-                    {/* Button to adopt both pets*/}
-                    {/* Name of who is up in queue */}
-                </section>
+                <AdoptionSection pets={this.state.pets} name={topOfQueue} adopting={this.state.adopting}/>
                 <section className='queue'>
                     {/* Current Queue */}
                     {/* Button to join queue */}
