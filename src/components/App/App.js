@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
+import AdoptionPage from '../../routes/AdoptionPage/AdoptionPage'
 import LandingPage from '../../routes/LandinPage/LandingPage'
 import ApiService from '../../services/api-service'
-import PeopleList from '../PeopleList/PeopleList'
 
 export default class App extends Component {
     state = {
@@ -23,7 +23,7 @@ export default class App extends Component {
     render(){
         return(
             <div>
-                <LandingPage/>
+                <AdoptionPage/>
             </div>
         )
     }

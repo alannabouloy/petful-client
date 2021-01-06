@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import AdoptionSection from '../../components/AdoptionSection/AdoptionSection'
 import Header from '../../components/Header/Header'
+import Queue from '../../components/Queue/Queue'
 
 export default class AdoptionPage extends Component {
     state = {
@@ -61,19 +62,21 @@ export default class AdoptionPage extends Component {
         //calls timedDequeue
     }
 
-
+    getTopOfQueue = () => {
+        if (this.state.people){
+            return this.state.people[0]
+        }
+        return null
+    }
     
     render(){
-        let topOfQueue = this.state.people[0].name || ''
+        let topOfQueue = this.getTopOfQueue()
         return (
             <div>
                 {/* Heading */}
                 <Header />
                 <AdoptionSection pets={this.state.pets} name={topOfQueue} adopting={this.state.adopting}/>
-                <section className='queue'>
-                    {/* Current Queue */}
-                    {/* Button to join queue */}
-                </section>
+                <Queue people={this.state.people}/>
             </div>
         )
     }
