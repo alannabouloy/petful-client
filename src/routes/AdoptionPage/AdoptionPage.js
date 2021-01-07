@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import AdoptionSection from '../../components/AdoptionSection/AdoptionSection'
 import Header from '../../components/Header/Header'
 import Queue from '../../components/Queue/Queue'
+import ApiService from '../../services/api-service'
+import helper from '../../helper'
 
 export default class AdoptionPage extends Component {
     state = {
@@ -12,59 +14,97 @@ export default class AdoptionPage extends Component {
         },
         userInQueue: false,
         adopting: false,
+        user: {}
     }
-
+    componentDidMount(){
+        ApiService.getPeople()
+            .then(res => {
+                const people = res
+                this.setState({people})
+            })
+    }
     handleJoinQueue = () => {
-        //enqueues person
-        //sets state to update queue
-        //starts timed enqueue function
+        this.enqueuePerson(this.state.user)
+        .then(() => {
+            this.timedEnqueue()
+        })
     }
 
     handlePetAdoption = (person, petType) => {
-        //check petType
-        //if both dequeue two pets
-        //else dequeue one pet
-        //return message about adoption
+        if(!petType){
+            petType = helper.generatePet()
+        }
+        if(petType === 'both'){
+            const cat = this.dequeuePet('cat')
+            .then(() => {
+                const dog = this.dequeuePet('dog')
+                .then(() => {
+                    return `Yay! ${person.name} has adopted ${cat.name} and ${dog.name}!`
+                })
+            })     
+        }
+        const pet = this.dequeuePet(petType)
+        .then(() => `Yay! ${person.name} has adopted ${pet.name}!`)
     }
 
     enqueuePerson = person => {
-        //if person then enqueues them
-        //else randomly generate person
-        //enqueue generated person
+        if(person){
+            ApiService.enqueuePerson(person)
+            .then(res => {
+                const people = res
+                this.setState({people})
+            })
+        }
+        else {
+            ApiService.enqueuePerson()
+            .then(res => {
+                const people = res
+                this.setState({people})
+            })
+        }
     }
 
     dequeuePerson = () => {
-        //takes top person of queue
-        //dequeues person
-        //returns dequeued person
+        ApiService.dequeuePerson()
+        .then(res => {
+            const person = res.name
+            return person
+        })
     }
 
     dequeuePet = petType => {
-        //dequeues pet
-        //returns dequeues pet
+        ApiService.dequeuePet(petType)
+        .then(res => {
+            return res
+        })
     }
 
     timedEnqueue = () => {
-        //check if 5 people in queue behind user
-        //returns if true
-        //counts to 5 seconds
-        //enqueues person
-        //updates state
-        //calls timedEnqueue
+        const userIndex = this.state.people.findIndex(person => person.user === true)
+        const behindUser = this.state.people.slice(userIndex, this.state.people.length)
+          //check if 5 people in queue behind user
+        if(behindUser.length >= 5){
+            //returns if true
+            return
+        }
+        setTimeout(this.enqueuePerson(), 5000)
+        this.timedEnqueue()
     }
 
     timedDequeue = () => {
-        //check if user is at top of queue
-        //returns if true
-        //else counts to 5 seconds
-        //dequeues person
-        //updates state
-        //calls timedDequeue
+        if(this.state.people[0].user){
+            return
+        }
+        if(this.state.people.length === 0){
+            return
+        }
+        setTimeout(this.handlePetAdoption(this.state.people[0]), 5000)
+        this.timedDequeue()
     }
 
     getTopOfQueue = () => {
-        if (this.state.people){
-            return this.state.people[0]
+        if (this.state.people.length > 0){
+            return this.state.people[0].name
         }
         return null
     }
