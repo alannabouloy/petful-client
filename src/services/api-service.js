@@ -83,7 +83,8 @@ const ApiService = {
                 'authorization': `Bearer ${config.API_TOKEN}`,
                 'content-type': 'application/json'
             },
-            body: JSON.stringify(petType)
+            body: JSON.stringify({'type': petType})
+            
         })
         .then(res => 
             (!res.ok)

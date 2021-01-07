@@ -22,6 +22,7 @@ export default class AdoptionPage extends Component {
                 const people = res
                 this.setState({people})
             })
+            .then(() => this.timedDequeue())
     }
     handleJoinQueue = () => {
         this.enqueuePerson(this.state.user)
@@ -33,18 +34,15 @@ export default class AdoptionPage extends Component {
     handlePetAdoption = (person, petType) => {
         if(!petType){
             petType = helper.generatePet()
+            console.log('pet type is', petType)
         }
         if(petType === 'both'){
             const cat = this.dequeuePet('cat')
-            .then(() => {
-                const dog = this.dequeuePet('dog')
-                .then(() => {
-                    return `Yay! ${person.name} has adopted ${cat.name} and ${dog.name}!`
-                })
-            })     
+            const dog = this.dequeuePet('dog')
+            return `Yay! ${person.name} has adopted ${cat.name} and ${dog.name}!`     
         }
-        const pet = this.dequeuePet(petType)
-        .then(() => `Yay! ${person.name} has adopted ${pet.name}!`)
+        const pet = this.dequeuePet(petType).then(() => `Yay! ${person.name} has adopted ${pet.name}!`)
+
     }
 
     enqueuePerson = person => {
@@ -74,9 +72,7 @@ export default class AdoptionPage extends Component {
 
     dequeuePet = petType => {
         ApiService.dequeuePet(petType)
-        .then(res => {
-            return res
-        })
+        .then(res => res)
     }
 
     timedEnqueue = () => {
