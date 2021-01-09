@@ -31,18 +31,60 @@ export default class AdoptionPage extends Component {
         })
     }
 
-    handlePetAdoption = (person, petType) => {
+    handlePetAdoption = async (petType) => {
         if(!petType){
             petType = helper.generatePet()
             console.log('pet type is', petType)
         }
-        if(petType === 'both'){
-            const cat = this.dequeuePet('cat')
-            const dog = this.dequeuePet('dog')
-            return `Yay! ${person.name} has adopted ${cat.name} and ${dog.name}!`     
+        if(this.state.people.length === 0){
+            return
         }
-        const pet = this.dequeuePet(petType).then(() => `Yay! ${person.name} has adopted ${pet.name}!`)
-
+        if(petType === 'both'){
+            ApiService.dequeuePerson()
+            .then(res => {
+                ApiService.getPeople()
+                    .then(res => {
+                        const people = res
+                        this.setState({people})
+                    })
+                return res
+            })
+            .then(res => {
+                const person = res
+                ApiService.dequeuePet('cat')
+                .then(res => {
+                    const cat = res
+                    ApiService.dequeuePet('dog')
+                    .then(res => {
+                        const dog = res
+                        return `Yay! ${person.name} has adopted ${cat.name} and ${dog.name}!`
+                    })
+                })      
+            })
+            
+            //.then(this.timedDequeue()) 
+        }
+        ApiService.dequeuePerson()
+        .then(res => {
+            const person = res
+            ApiService.getPeople()
+            .then(res => {
+                const people = res
+                this.setState({people})
+            })
+            .then(() => {
+                console.log('person is', person)
+                ApiService.dequeuePet(petType)
+                .then(res => {
+                    const pet = res
+                    console.log('pet is', pet)
+                    return `Yay! ${person.name} has adopted ${pet.name}!`
+                })
+            })
+            .then(this.timedDequeue())
+        })
+        
+        //
     }
 
     enqueuePerson = person => {
@@ -62,19 +104,6 @@ export default class AdoptionPage extends Component {
         }
     }
 
-    dequeuePerson = () => {
-        ApiService.dequeuePerson()
-        .then(res => {
-            const person = res.name
-            return person
-        })
-    }
-
-    dequeuePet = petType => {
-        ApiService.dequeuePet(petType)
-        .then(res => res)
-    }
-
     timedEnqueue = () => {
         const userIndex = this.state.people.findIndex(person => person.user === true)
         const behindUser = this.state.people.slice(userIndex, this.state.people.length)
@@ -88,14 +117,18 @@ export default class AdoptionPage extends Component {
     }
 
     timedDequeue = () => {
+        if(this.state.people.length === 0 ){
+            console.log('queue is empty')
+            return
+        }
+            
         if(this.state.people[0].user){
+            console.log('user is up')
             return
         }
-        if(this.state.people.length === 0){
-            return
-        }
-        setTimeout(this.handlePetAdoption(this.state.people[0]), 5000)
-        this.timedDequeue()
+
+        console.log('running')
+        setTimeout(this.handlePetAdoption(), 5000)
     }
 
     getTopOfQueue = () => {
