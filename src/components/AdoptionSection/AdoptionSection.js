@@ -8,7 +8,7 @@ export default function AdoptionSection(props){
         adoptionMsg = `${props.name}, it's time to pick your new pet!`
         
         if(props.adopting){
-            adoptionMsg = `${props.name} has adopted ${props.adoptedPet.name}! Yay!`
+            adoptionMsg = props.message
         }
     }
     
