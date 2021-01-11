@@ -15,7 +15,7 @@ export default function AdoptionSection(props){
     if(props.user.name){
         return(
             <section className='adoption'>
-                <PetSelection pets={props.pets}/>
+                <PetSelection pets={props.pets} handleAdopt={props.handleAdopt}/>
                 <div className='adoption-msg'>
                     <h3>{adoptionMsg}</h3>
                 </div>

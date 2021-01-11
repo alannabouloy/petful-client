@@ -23,10 +23,7 @@ export default class AdoptionPage extends Component {
       .then((res) => {
         const people = res;
         this.setState({ people });
-        const userIndex = people.findIndex(person => person.user)
-        if(userIndex >= 0){
-            this.setState({user: people[userIndex]})
-        }
+        this.checkUser()
       })
       .then(() => {
           ApiService.getPets()
@@ -52,20 +49,20 @@ export default class AdoptionPage extends Component {
       return;
     }
     if (petType === "both") {
-      ApiService.dequeuePerson()
-        .then(() => {
-          ApiService.getPeople().then((res) => {
-            const people = res;
-            this.setState({ people });
+      ApiService.dequeuePerson().then(res => {
+          const person = res
+          ApiService.getPeople()
+            .then((res) => {
+                const people = res;
+                this.setState({ people });
           })
-          .then(() => {
+            .then(() => {
               ApiService.getPets()
                 .then(res => {
                     const pets = res
                     this.setState({pets})
                 })
-                .then((res) => {
-                    const person = res;
+                .then(() => {
                     ApiService.dequeuePet("cat").then((res) => {
                       const cat = res;
                       ApiService.dequeuePet("dog").then((res) => {
@@ -73,41 +70,42 @@ export default class AdoptionPage extends Component {
                         const message = `Yay! ${person.name} has adopted ${cat.name} and ${dog.name}!`;
                         this.setState({message})
                         this.setState({adopting: true})
-                      });
+                        this.checkUser()
+                      })
+                      .then(this.timedDequeue())
                     });
                   })
-                  .then(this.timedDequeue())
+                  
                 })
-          })
-          
-    }
-    ApiService.dequeuePerson().then((res) => {
-      const person = res;
-      ApiService.getPeople()
-        .then((res) => {
-          const people = res;
-          this.setState({ people });
-        })
-        .then(() => {
-            ApiService.getPets()
-            .then(res => {
-                const pets = res
-                this.setState({pets})
-            })
-            .then(() => {
-                ApiService.dequeuePet(petType).then((res) => {
-                  const pet = res;
-                  const message = `Yay! ${person.name} has adopted ${pet.name}!`;
-                  this.setState({message})
-                  this.setState({adopting: true})
-                });
+          }) 
+    } else{
+        ApiService.dequeuePerson().then((res) => {
+            const person = res;
+            ApiService.getPeople()
+              .then((res) => {
+                const people = res;
+                this.setState({ people });
               })
-              .then(this.timedDequeue());
-        })
-        
-    });
-
-    //
+              .then(() => {
+                  ApiService.getPets()
+                  .then(res => {
+                      const pets = res
+                      this.setState({pets})
+                  })
+                  .then(() => {
+                      ApiService.dequeuePet(petType).then((res) => {
+                        const pet = res;
+                        const message = `Yay! ${person.name} has adopted ${pet.name}!`;
+                        this.setState({message})
+                        this.setState({adopting: true})
+                        this.checkUser()
+                      })
+                      .then(this.timedDequeue());
+                    })
+                    
+              }) 
+          });
+    }
   };
 
   enqueuePerson = (person) => {
@@ -132,12 +130,14 @@ export default class AdoptionPage extends Component {
       (person) => person.user === true
     );
     console.log('user is at index:', userIndex)
-    if(userIndex >= 0){
-        const behindUser = this.state.people.slice(
-            userIndex + 1,
-            this.state.people.length
-          );
-        //check if 5 people in queue behind user
+    if(userIndex < 0){
+        this.timedDequeue()
+        return
+    }   //check if 5 people in queue behind user
+    const behindUser = this.state.people.slice(
+        userIndex + 1,
+        this.state.people.length
+      );
     if (behindUser.length >= 5) {
         //returns if true
         return;
@@ -145,7 +145,6 @@ export default class AdoptionPage extends Component {
       setTimeout(() => {
           this.enqueuePerson()
       }, 5000);
-    }
   };
 
   timedDequeue = () => {
@@ -188,6 +187,17 @@ export default class AdoptionPage extends Component {
       this.enqueuePerson(user) 
   }
 
+  checkUser = () => {
+      const userIndex = this.state.people.findIndex(person => person.user)
+      if(userIndex >= 0){
+          const user = this.state.people[userIndex]
+          this.setState({user})
+      }
+      else{
+          this.setState({user: { }})
+      }
+  }
+
   render() {
     let topOfQueue = this.getTopOfQueue();
     return (
@@ -199,6 +209,7 @@ export default class AdoptionPage extends Component {
           adopting={this.state.adopting}
           message={this.state.message}
           user={this.state.user}
+          handleAdopt={this.handlePetAdoption}
         />
         <Queue people={this.state.people} addUser={this.addUser} />
       </div>
