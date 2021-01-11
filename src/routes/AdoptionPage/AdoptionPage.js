@@ -23,8 +23,21 @@ export default class AdoptionPage extends Component {
       .then((res) => {
         const people = res;
         this.setState({ people });
+        const userIndex = people.findIndex(person => person.user)
+        if(userIndex >= 0){
+            this.setState({user: people[userIndex]})
+        }
       })
-      .then(() => this.timedDequeue());
+      .then(() => {
+          ApiService.getPets()
+          .then(res => {
+              const pets = res
+              this.setState({pets})
+              console.log(this.state)
+          })
+          .then(() => this.timedDequeue());
+      })
+      
   }
   handleJoinQueue = () => {
     this.enqueuePerson(this.state.user).then(() => {
@@ -42,25 +55,33 @@ export default class AdoptionPage extends Component {
     }
     if (petType === "both") {
       ApiService.dequeuePerson()
-        .then((res) => {
+        .then(() => {
           ApiService.getPeople().then((res) => {
             const people = res;
             this.setState({ people });
           })
-          .then((res) => {
-            const person = res;
-            ApiService.dequeuePet("cat").then((res) => {
-              const cat = res;
-              ApiService.dequeuePet("dog").then((res) => {
-                const dog = res;
-                const message = `Yay! ${person.name} has adopted ${cat.name} and ${dog.name}!`;
-                this.setState({message})
-                this.setState({adopting: true})
-              });
-            });
+          .then(() => {
+              ApiService.getPets()
+                .then(res => {
+                    const pets = res
+                    this.setState({pets})
+                })
+                .then((res) => {
+                    const person = res;
+                    ApiService.dequeuePet("cat").then((res) => {
+                      const cat = res;
+                      ApiService.dequeuePet("dog").then((res) => {
+                        const dog = res;
+                        const message = `Yay! ${person.name} has adopted ${cat.name} and ${dog.name}!`;
+                        this.setState({message})
+                        this.setState({adopting: true})
+                      });
+                    });
+                  })
+                  .then(this.timedDequeue())
+                })
           })
-          .then(this.timedDequeue())
-        })
+          
     }
     ApiService.dequeuePerson().then((res) => {
       const person = res;
@@ -70,15 +91,23 @@ export default class AdoptionPage extends Component {
           this.setState({ people });
         })
         .then(() => {
-          console.log("person is", person);
-          ApiService.dequeuePet(petType).then((res) => {
-            const pet = res;
-            const message = `Yay! ${person.name} has adopted ${pet.name}!`;
-            this.setState({message})
-            this.setState({adopting: true})
-          });
+            ApiService.getPets()
+            .then(res => {
+                const pets = res
+                this.setState({pets})
+            })
+            .then(() => {
+                console.log("person is", person);
+                ApiService.dequeuePet(petType).then((res) => {
+                  const pet = res;
+                  const message = `Yay! ${person.name} has adopted ${pet.name}!`;
+                  this.setState({message})
+                  this.setState({adopting: true})
+                });
+              })
+              .then(this.timedDequeue());
         })
-        .then(this.timedDequeue());
+        
     });
 
     //

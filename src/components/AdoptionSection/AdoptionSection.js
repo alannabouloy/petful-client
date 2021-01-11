@@ -12,7 +12,7 @@ export default function AdoptionSection(props){
         }
     }
     
-    if(props.user === true){
+    if(props.user){
         return(
             <section className='adoption'>
                 <PetSelection pets={props.pets}/>
