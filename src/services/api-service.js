@@ -59,7 +59,7 @@ const ApiService = {
         .then(res => 
             (!res.ok)
             ?res.json().then(e => Promise.reject(e))
-            :res
+            :res.json()
             )
     },
     //function to GET animals

@@ -33,7 +33,6 @@ export default class AdoptionPage extends Component {
           .then(res => {
               const pets = res
               this.setState({pets})
-              console.log(this.state)
           })
           .then(() => this.timedDequeue());
       })
@@ -48,7 +47,6 @@ export default class AdoptionPage extends Component {
   handlePetAdoption = (petType) => {
     if (!petType) {
       petType = helper.generatePet();
-      console.log("pet type is", petType);
     }
     if (this.state.people.length === 0) {
       return;
@@ -97,7 +95,6 @@ export default class AdoptionPage extends Component {
                 this.setState({pets})
             })
             .then(() => {
-                console.log("person is", person);
                 ApiService.dequeuePet(petType).then((res) => {
                   const pet = res;
                   const message = `Yay! ${person.name} has adopted ${pet.name}!`;
@@ -131,7 +128,6 @@ export default class AdoptionPage extends Component {
 
   timedEnqueue = () => {
     console.log('timedEnqueue is running')
-    console.log(this.state.people)
     const userIndex = this.state.people.findIndex(
       (person) => person.user === true
     );
@@ -141,9 +137,6 @@ export default class AdoptionPage extends Component {
             userIndex + 1,
             this.state.people.length
           );
-
-          console.log('people behind user:', behindUser)
-
         //check if 5 people in queue behind user
     if (behindUser.length >= 5) {
         //returns if true

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Button from '../Button/Button'
 
 export default class NameForm extends Component{
     state = {
@@ -25,9 +26,7 @@ export default class NameForm extends Component{
                 <div className='form-field'>
                 <input type='text' id='name'  placeholder='Jane Doe' required onChange={e => this.changeName(e)}/>
                 </div>
-                <div className='button-div'>
-                    <button type='submit'>Submit</button>
-                </div>
+                <Button type='submit' buttonText='Submit'/>
             </form>
         )
     }
