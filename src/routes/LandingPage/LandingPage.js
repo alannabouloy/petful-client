@@ -39,7 +39,7 @@ export default class LandingPage extends Component {
                         </p>
                     </div>
                     <Link to='/adoption'>
-                        <div className='button-div'>
+                        <div className='link-div'>
                             Get Started
                         </div> 
                     </Link>

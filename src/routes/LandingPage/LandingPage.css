@@ -2,15 +2,25 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: #8CBA80;
+    margin: 0px;
+    padding: 0px;
+    
 }
 .welcome-msg {
     height: 50vh;
-    background-color: beige;
+    background-color: white;
+    width: 85%;
+    margin: auto;
     font-size: 18px;
     overflow: scroll;
 }
 .welcome-heading {
     text-align: center;
+    font-size: 16px;
+    width: 70%;
+    margin: auto;
+    color: white;
 }
 .main-image {
     flex: 1;
@@ -18,12 +28,25 @@
     margin: auto;
 }
 
-.button-div {
+.link-div {
+    padding: 10px;
+    background-color: #658E9C;
     text-align: center;
-    margin-top: 10px;
+    width: 70%;
+    margin: 10px auto;
 }
-.button-div button {
-    width: 30%;
+
+.link-div:hover {
+    background-color: #486670;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+a:visited {
+    color: white;
 }
 
 .welcome-msg p {
