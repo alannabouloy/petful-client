@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Header from '../../components/Header/Header'
 import image from '../../cat-and-dog.jpg'
+import {Link} from 'react-router-dom'
 import './LandingPage.css'
 
 
@@ -37,9 +38,12 @@ export default class LandingPage extends Component {
                             Now that you know the process, you can click the button down below to get started. Your new furry companion is just a click away!
                         </p>
                     </div>
-                    <div className='button-div'>
-                        <button>Get Started</button>
-                    </div> 
+                    <Link to='/adoption'>
+                        <div className='button-div'>
+                            Get Started
+                        </div> 
+                    </Link>
+                    
                 </section>
                 
             </div>
