@@ -12,9 +12,19 @@ export default function AdoptionSection(props){
         }
     }
     
+    if(props.user === true){
+        return(
+            <section className='adoption'>
+                <PetSelection pets={props.pets}/>
+                <div className='adoption-msg'>
+                    <h3>{adoptionMsg}</h3>
+                </div>
+            </section>
+        )
+    }
+    
     return(
         <section className='adoption'>
-            <PetSelection pets={props.pets}/>
             <div className='adoption-msg'>
                 <h3>{adoptionMsg}</h3>
             </div>

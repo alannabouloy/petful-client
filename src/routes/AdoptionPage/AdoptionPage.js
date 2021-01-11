@@ -46,21 +46,21 @@ export default class AdoptionPage extends Component {
           ApiService.getPeople().then((res) => {
             const people = res;
             this.setState({ people });
-          });
-          return res;
-        })
-        .then((res) => {
-          const person = res;
-          ApiService.dequeuePet("cat").then((res) => {
-            const cat = res;
-            ApiService.dequeuePet("dog").then((res) => {
-              const dog = res;
-              return `Yay! ${person.name} has adopted ${cat.name} and ${dog.name}!`;
+          })
+          .then((res) => {
+            const person = res;
+            ApiService.dequeuePet("cat").then((res) => {
+              const cat = res;
+              ApiService.dequeuePet("dog").then((res) => {
+                const dog = res;
+                const message = `Yay! ${person.name} has adopted ${cat.name} and ${dog.name}!`;
+                this.setState({message})
+                this.setState({adopting: true})
+              });
             });
-          });
-        });
-
-      //.then(this.timedDequeue())
+          })
+          .then(this.timedDequeue())
+        })
     }
     ApiService.dequeuePerson().then((res) => {
       const person = res;
@@ -88,49 +88,66 @@ export default class AdoptionPage extends Component {
     if (person) {
       ApiService.enqueuePerson(person).then((res) => {
         const people = res;
-        this.setState({ people });
-      });
+        this.setState({ people }) 
+      })
+      .then(() => this.timedEnqueue())
     } else {
       ApiService.enqueuePerson().then((res) => {
         const people = res;
         this.setState({ people });
-      });
+      })
+      .then(() => this.timedEnqueue())
     }
   };
 
   timedEnqueue = () => {
+    console.log('timedEnqueue is running')
+    console.log(this.state.people)
     const userIndex = this.state.people.findIndex(
       (person) => person.user === true
     );
-    const behindUser = this.state.people.slice(
-      userIndex,
-      this.state.people.length
-    );
-    //check if 5 people in queue behind user
+    console.log('user is at index:', userIndex)
+    if(userIndex >= 0){
+        const behindUser = this.state.people.slice(
+            userIndex + 1,
+            this.state.people.length
+          );
+
+          console.log('people behind user:', behindUser)
+
+        //check if 5 people in queue behind user
     if (behindUser.length >= 5) {
-      //returns if true
-      return;
+        //returns if true
+        return;
+      }
+      setTimeout(() => {
+          this.enqueuePerson()
+      }, 5000);
     }
-    setTimeout(this.enqueuePerson(), 10000);
-    this.timedEnqueue();
   };
 
   timedDequeue = () => {
     this.setState({adopting: false})
-    if (this.state.people.length === 0) {
-      console.log("queue is empty");
-      return;
-    }
+    ApiService.getPeople().then(res => {
+        const people = res
+        this.setState({people})
 
-    if (this.state.people[0].user) {
-      console.log("user is up");
-      return;
-    }
-
-    console.log("running");
-    setTimeout(() => {
-        this.handlePetAdoption()
-    }, 5000);
+        if (this.state.people.length === 0) {
+            console.log("queue is empty");
+            return;
+          }
+      
+          if (this.state.people[0].user) {
+            console.log("user is up");
+            return;
+          }
+      
+          console.log("running");
+          setTimeout(() => {
+              this.handlePetAdoption()
+          }, 5000);
+    })
+    
   };
 
   getTopOfQueue = () => {
@@ -139,6 +156,15 @@ export default class AdoptionPage extends Component {
     }
     return null;
   };
+
+  addUser = name => {
+      const user = {
+          name: name,
+          user: true
+      }
+      this.setState({user})
+      this.enqueuePerson(user) 
+  }
 
   render() {
     let topOfQueue = this.getTopOfQueue();
@@ -150,8 +176,9 @@ export default class AdoptionPage extends Component {
           name={topOfQueue}
           adopting={this.state.adopting}
           message={this.state.message}
+          user={this.state.user}
         />
-        <Queue people={this.state.people} />
+        <Queue people={this.state.people} addUser={this.addUser} />
       </div>
     );
   }

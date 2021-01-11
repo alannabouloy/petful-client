@@ -16,7 +16,7 @@ const ApiService = {
             )
     },
     //function to POST person to queue
-    queuePerson(person){
+    enqueuePerson(person){
         if(person){
             return fetch(`${config.API_ENDPOINT}/people`, {
                 method: 'POST',
@@ -38,12 +38,13 @@ const ApiService = {
                 headers: {
                     'authorization': `Bearer ${config.API_TOKEN}`
                 }
+            })
                 .then(res =>
                     (!res.ok)
                         ?res.json().then(e => Promise.reject(e))
                         :res.json()
                         )
-            })
+            
         }
         
     },

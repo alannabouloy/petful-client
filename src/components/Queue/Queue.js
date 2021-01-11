@@ -9,7 +9,7 @@ export default function Queue(props){
             <PeopleList people={props.people}/>
 
             <h3>Join the queue!</h3>
-            <NameForm />
+            <NameForm addUser={props.addUser}/>
         </section>
     )
 }
