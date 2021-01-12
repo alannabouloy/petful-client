@@ -4,6 +4,7 @@ import Header from "../../components/Header/Header";
 import Queue from "../../components/Queue/Queue";
 import ApiService from "../../services/api-service";
 import helper from "../../helper";
+import './AdoptionPage.css'
 
 export default class AdoptionPage extends Component {
   state = {
@@ -201,7 +202,7 @@ export default class AdoptionPage extends Component {
   render() {
     let topOfQueue = this.getTopOfQueue();
     return (
-      <div>
+      <div className='adoption-page'>
         <Header />
         <AdoptionSection
           pets={this.state.pets}

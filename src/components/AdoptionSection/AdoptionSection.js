@@ -1,5 +1,6 @@
 import React from 'react'
 import PetSelection from '../PetSelection/PetSelection'
+import './AdoptionSection.css'
 
 export default function AdoptionSection(props){
     let adoptionMsg='There is no one in line at the moment.'

@@ -1,6 +1,7 @@
 import React from 'react'
 import Pet from '../Pet/Pet'
 import Button from '../Button/Button'
+import './PetSelection.css'
 
 export default function PetSelection(props){
     let pets = 'All of the pets have been adopted! Yay!!'
@@ -12,9 +13,14 @@ export default function PetSelection(props){
         )
     }
     return (
-        <div className='pet-selection'>
-            {pets}
-            {button}
+        <div>
+            <div className='pet-selection'>
+                {pets}
+            </div>
+            <div className='adopt-both'>
+                    {button}
+            </div>
         </div>
     )
+        
 }

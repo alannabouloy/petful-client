@@ -1,0 +1,24 @@
+.pet {
+    flex: 1;
+    text-align: center;
+    color: #658E9C;
+    margin: 10px;
+}
+.pet img {
+    width: 70%;
+    margin: auto;
+    border: white 5px solid;
+}
+
+.desc {
+    width: 70%;
+    height: 40%;
+    overflow: scroll;
+    margin: 10px auto;
+    background-color: white;
+}
+
+.desc p {
+    text-align: left;
+    margin: 5px;
+}

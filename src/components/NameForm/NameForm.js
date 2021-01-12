@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Button from '../Button/Button'
+import './NameForm.css'
 
 export default class NameForm extends Component{
     state = {

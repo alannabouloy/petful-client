@@ -1,0 +1,16 @@
+.button-div {
+    width: 70%;
+    margin: auto;
+}
+.button-div button {
+    border: none;
+    background-color: #658E9C;
+    color: white;
+    width: 100%;
+    margin: 5px auto;
+    padding: 5px;
+}
+
+.button-div button:hover {
+    background-color: #486670;
+}

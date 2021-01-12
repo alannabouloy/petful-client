@@ -1,0 +1,12 @@
+.form-label {
+    color: white;
+    width: 70%;
+    margin: 5px auto;
+}
+.form-field {
+    width: 70%;
+    margin: 5px auto;
+}
+input {
+    width: 100%;
+}
