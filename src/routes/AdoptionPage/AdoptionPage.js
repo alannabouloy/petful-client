@@ -19,7 +19,6 @@ export default class AdoptionPage extends Component {
     message: ''
   };
   componentDidMount() {
-      console.log('mounted')
     ApiService.getPeople()
       .then((res) => {
         const people = res;
@@ -126,11 +125,9 @@ export default class AdoptionPage extends Component {
   };
 
   timedEnqueue = () => {
-    console.log('timedEnqueue is running')
     const userIndex = this.state.people.findIndex(
       (person) => person.user === true
     );
-    console.log('user is at index:', userIndex)
     if(userIndex < 0){
         this.timedDequeue()
         return
@@ -155,16 +152,14 @@ export default class AdoptionPage extends Component {
         this.setState({people})
 
         if (this.state.people.length === 0) {
-            console.log("queue is empty");
             return;
           }
       
           if (this.state.people[0].user) {
-            console.log("user is up");
             return;
           }
       
-          console.log("running");
+  
           setTimeout(() => {
               this.handlePetAdoption()
           }, 5000);
